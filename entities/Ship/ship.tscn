@@ -70,7 +70,7 @@ animations = [{
 }]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_vael5"]
-size = Vector2(12, 18)
+size = Vector2(6, 15)
 
 [node name="Ship" type="CharacterBody2D" groups=["ship"]]
 script = ExtResource("1_vael5")
@@ -86,6 +86,7 @@ speed_scale = 2.0
 texture = ExtResource("2_u1ybi")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, 0.5)
 shape = SubResource("RectangleShape2D_vael5")
 
 [node name="GunPoint" type="Marker2D" parent="."]

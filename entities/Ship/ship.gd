@@ -12,7 +12,16 @@ enum states {
 	DEAD,
 	}
 var state: states = states.IDLE
+var screenwrapsize: Vector2
+var lives: int = 3 # 0 = death.
+var is_invulnerable: bool = false
 
+func _ready() -> void:
+	hit.connect(_on_self_hit)
+	var collisionshape2d: CollisionShape2D = get_node_or_null("CollisionShape2D")
+	if collisionshape2d != null:
+		screenwrapsize = collisionshape2d.get_shape().get_rect().size
+		screenwrapsize /= 2
 
 func _physics_process(delta: float) -> void:
 	var direction := Input.get_axis("ui_left", "ui_right")
@@ -41,7 +50,12 @@ func _handle_moving_state(direction: float, delta: float) -> void:
 	if Input.is_action_pressed("forward"):
 		_set_anim("high")
 		velocity += Vector2(0, -ACCELERATION * delta).rotated(rotation)
+	elif Input.is_action_pressed("backwards"):
+		_set_anim("low")
+		velocity = velocity.move_toward(Vector2.ZERO, ACCELERATION * delta)
 	else:
+		if !direction:
+			_set_anim("stop")
 		velocity = velocity.move_toward(Vector2.ZERO, ACCELERATION / 1.5 * delta)
 	
 	velocity = velocity.clamp(Vector2(-MAX_SPEED, -MAX_SPEED), Vector2(MAX_SPEED, MAX_SPEED))
@@ -60,15 +74,15 @@ func _set_state(new_state: states) -> void:
 	state = new_state
 
 func _screen_wrap() -> void:
-	if position.y < -10:
-		position.y = 250
-	elif position.y > 250:
-		position.y = -10
+	if position.y < 0 - screenwrapsize.y:
+		position.y = 240 + screenwrapsize.y
+	elif position.y > 240 + screenwrapsize.y:
+		position.y = 0 - screenwrapsize.y
 	
-	if position.x > 326:
-		position.x = -6
-	elif position.x < -6:
-		position.x = 326
+	if position.x > 320 + screenwrapsize.x:
+		position.x = 0 - screenwrapsize.x
+	elif position.x < 0 - screenwrapsize.x:
+		position.x = 320 + screenwrapsize.x
 
 func _set_anim(anim: String) -> void:
 	match anim:
@@ -80,3 +94,16 @@ func _set_anim(anim: String) -> void:
 			animsprite2d.play(anim)
 		_:
 			push_warning("Invalid animation string! Ignoring...")
+
+func _on_self_hit() -> void:
+	if is_invulnerable != true:
+		lives -= 1
+		is_invulnerable = true
+		velocity = Vector2(0, 75).rotated(rotation)
+		for i in range(0, 46):
+			get_node("AnimatedSprite2D").visible =! get_node("AnimatedSprite2D").visible
+			get_node("Sprite2D").visible =! get_node("Sprite2D").visible
+			await get_tree().create_timer(0.033).timeout
+		is_invulnerable = false
+	if lives <= 0:
+		died.emit()

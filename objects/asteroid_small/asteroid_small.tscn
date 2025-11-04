@@ -1,0 +1,75 @@
+[gd_scene load_steps=11 format=3 uid="uid://d1spllygyk272"]
+
+[ext_resource type="PackedScene" uid="uid://swgv3vmpc5y" path="res://objects/asteroid_base/asteroid_base.tscn" id="1_iiv25"]
+[ext_resource type="Script" uid="uid://b3pns7wioqid5" path="res://objects/asteroid_small/asteroid_small.gd" id="2_vriaj"]
+[ext_resource type="Texture2D" uid="uid://b1765gdv37dxo" path="res://objects/asteroid_small/asteroid_small.png" id="3_tdf4m"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_wcidy"]
+atlas = ExtResource("3_tdf4m")
+region = Rect2(0, 0, 8, 8)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_imv17"]
+atlas = ExtResource("3_tdf4m")
+region = Rect2(0, 0, 8, 8)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_sqsr7"]
+atlas = ExtResource("3_tdf4m")
+region = Rect2(8, 0, 8, 8)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_yvwdh"]
+atlas = ExtResource("3_tdf4m")
+region = Rect2(0, 8, 8, 8)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_csvs1"]
+atlas = ExtResource("3_tdf4m")
+region = Rect2(8, 8, 8, 8)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_ateai"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_wcidy")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_imv17")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_sqsr7")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_yvwdh")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_csvs1")
+}],
+"loop": false,
+"name": &"destroy",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_vriaj"]
+size = Vector2(8, 8)
+
+[node name="Asteroid_Small" instance=ExtResource("1_iiv25")]
+script = ExtResource("2_vriaj")
+speedmin = 2.0
+speedmax = 4.0
+
+[node name="AnimatedSprite2D" parent="." index="0"]
+sprite_frames = SubResource("SpriteFrames_ateai")
+speed_scale = 2.0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." index="1"]
+shape = SubResource("RectangleShape2D_vriaj")
+
+[node name="Timer" type="Timer" parent="." index="2"]
+wait_time = 20.0
+one_shot = true
+autostart = true
+
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

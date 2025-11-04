@@ -1,6 +1,13 @@
 extends Area2D
+const SPEED = 2.5
+var screenwrapsize: Vector2
 
-const SPEED = 2
+func _ready() -> void:
+	var collisionshape2d: CollisionShape2D = get_node_or_null("CollisionShape2D")
+	if collisionshape2d != null:
+		screenwrapsize = collisionshape2d.get_shape().get_rect().size
+		screenwrapsize /= 2
+
 func _physics_process(_delta: float) -> void:
 	position += Vector2(0, -SPEED).rotated(rotation)
 	_screen_wrap()
@@ -16,15 +23,23 @@ func _on_body_entered(body: Node2D) -> void:
 	if body.is_in_group("ship"):
 		return
 	else:
-		body.hit.emit()
+		body.emit_signal("hit")
+		queue_free()
+
+func _on_area_entered(area: Area2D) -> void:
+	if area.is_in_group("ship"):
+		return
+	else:
+		area.emit_signal("hit")
+		queue_free()
 
 func _screen_wrap() -> void:
-	if position.y < -10:
-		position.y = 250
-	elif position.y > 250:
-		position.y = -10
+	if position.y < 0 - screenwrapsize.y:
+		position.y = 240 + screenwrapsize.y
+	elif position.y > 240 + screenwrapsize.y:
+		position.y = 0 - screenwrapsize.y
 	
-	if position.x > 326:
-		position.x = -6
-	elif position.x < -6:
-		position.x = 326
+	if position.x > 320 + screenwrapsize.x:
+		position.x = 0 - screenwrapsize.x
+	elif position.x < 0 - screenwrapsize.x:
+		position.x = 320 + screenwrapsize.x

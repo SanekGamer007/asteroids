@@ -1,0 +1,71 @@
+[gd_scene load_steps=12 format=3 uid="uid://b4o7sqv77fde4"]
+
+[ext_resource type="PackedScene" uid="uid://swgv3vmpc5y" path="res://objects/asteroid_base/asteroid_base.tscn" id="1_8cn77"]
+[ext_resource type="PackedScene" uid="uid://b8ki4c3a23uuy" path="res://objects/asteroid_medium/asteroid_medium.tscn" id="2_bcly0"]
+[ext_resource type="Script" uid="uid://bn3nr3280e72t" path="res://objects/asteroid_big/asteroid_big.gd" id="2_uay5o"]
+[ext_resource type="Texture2D" uid="uid://bhsg0hlge5ekv" path="res://objects/asteroid_big/asteroid_big.png" id="4_ieuwc"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hvbif"]
+atlas = ExtResource("4_ieuwc")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_bjb8c"]
+atlas = ExtResource("4_ieuwc")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_umob2"]
+atlas = ExtResource("4_ieuwc")
+region = Rect2(32, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hl0wp"]
+atlas = ExtResource("4_ieuwc")
+region = Rect2(0, 32, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_0veb2"]
+atlas = ExtResource("4_ieuwc")
+region = Rect2(32, 32, 32, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_yaige"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hvbif")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_bjb8c")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_umob2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hl0wp")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_0veb2")
+}],
+"loop": false,
+"name": &"destroy",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_bcly0"]
+size = Vector2(32, 32)
+
+[node name="Asteroid_Big" instance=ExtResource("1_8cn77")]
+script = ExtResource("2_uay5o")
+next_size_scene = ExtResource("2_bcly0")
+asteroid_bits = 3
+offsets = Array[Vector2]([Vector2(-16, -16), Vector2(-16, 16), Vector2(0, 16)])
+speedmax = 4.0
+
+[node name="AnimatedSprite2D" parent="." index="0"]
+sprite_frames = SubResource("SpriteFrames_yaige")
+speed_scale = 2.0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." index="1"]
+shape = SubResource("RectangleShape2D_bcly0")
