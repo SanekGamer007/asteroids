@@ -1,0 +1,96 @@
+[gd_scene load_steps=14 format=3 uid="uid://rtllnmbgamrf"]
+
+[ext_resource type="Script" uid="uid://41pywoi5ldwk" path="res://entities/Ship/ship.gd" id="1_vael5"]
+[ext_resource type="Texture2D" uid="uid://2qdiaq51ilgs" path="res://entities/Ship/ship_fire_high.png" id="2_ra61u"]
+[ext_resource type="Texture2D" uid="uid://cal2uh33f4cy4" path="res://entities/Ship/ship.png" id="2_u1ybi"]
+[ext_resource type="Texture2D" uid="uid://bqxbx1rgrbgeh" path="res://entities/Ship/ship_fire_low.png" id="3_ccnl4"]
+[ext_resource type="Texture2D" uid="uid://utarci1k02oe" path="res://entities/Ship/ship_fire_stop.png" id="4_0rppb"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_vljmp"]
+atlas = ExtResource("2_ra61u")
+region = Rect2(0, 0, 8, 4)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_h333w"]
+atlas = ExtResource("2_ra61u")
+region = Rect2(8, 0, 8, 4)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_r8okc"]
+atlas = ExtResource("2_ra61u")
+region = Rect2(16, 0, 8, 4)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_rm5it"]
+atlas = ExtResource("2_ra61u")
+region = Rect2(24, 0, 8, 4)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_5j4s5"]
+atlas = ExtResource("3_ccnl4")
+region = Rect2(0, 0, 8, 4)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_tx316"]
+atlas = ExtResource("3_ccnl4")
+region = Rect2(8, 0, 8, 4)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_g7yu5"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_vljmp")
+}, {
+"duration": 0.5,
+"texture": SubResource("AtlasTexture_h333w")
+}, {
+"duration": 0.5,
+"texture": SubResource("AtlasTexture_r8okc")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_rm5it")
+}],
+"loop": true,
+"name": &"high",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_5j4s5")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_tx316")
+}],
+"loop": true,
+"name": &"low",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("4_0rppb")
+}],
+"loop": true,
+"name": &"stop",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_vael5"]
+size = Vector2(12, 18)
+
+[node name="Ship" type="CharacterBody2D" groups=["ship"]]
+script = ExtResource("1_vael5")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+position = Vector2(0, 9)
+sprite_frames = SubResource("SpriteFrames_g7yu5")
+animation = &"stop"
+frame_progress = 0.9439362
+speed_scale = 2.0
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("2_u1ybi")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_vael5")
+
+[node name="GunPoint" type="Marker2D" parent="."]
+position = Vector2(0, -6)
+
+[node name="GunTimer" type="Timer" parent="."]
+wait_time = 0.4
+one_shot = true
