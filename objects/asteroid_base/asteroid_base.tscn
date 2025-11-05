@@ -1,7 +1,8 @@
-[gd_scene load_steps=4 format=3 uid="uid://swgv3vmpc5y"]
+[gd_scene load_steps=5 format=3 uid="uid://swgv3vmpc5y"]
 
 [ext_resource type="Script" uid="uid://bk0wf3emf6sjo" path="res://objects/asteroid_base/asteroid_base.gd" id="1_5vn3m"]
 [ext_resource type="Texture2D" uid="uid://7n5ctjy7h1wp" path="res://objects/asteroid_base/asteroid_placeholder.png" id="2_816yn"]
+[ext_resource type="AudioStream" uid="uid://cf5edcf8rsgjr" path="res://objects/asteroid_base/asteroidhit.wav" id="3_gsdds"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_gsdds"]
 animations = [{
@@ -28,6 +29,9 @@ script = ExtResource("1_5vn3m")
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_gsdds")
 animation = &"destroy"
+
+[node name="HitSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("3_gsdds")
 
 [connection signal="body_entered" from="." to="." method="_on_body_entered"]
 [connection signal="animation_finished" from="AnimatedSprite2D" to="." method="_on_animated_sprite_2d_animation_finished"]

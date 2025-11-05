@@ -18,7 +18,8 @@ config/icon="res://icon.svg"
 
 [autoload]
 
-game="*res://levels/game.gd"
+scoremanager="*res://global_scripts/score_manager.gd"
+game="*res://global_scripts/game.gd"
 
 [display]
 

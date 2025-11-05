@@ -1,9 +1,24 @@
-[gd_scene load_steps=36 format=3 uid="uid://dy5o6nvgdm0xh"]
+[gd_scene load_steps=40 format=3 uid="uid://dy5o6nvgdm0xh"]
 
 [ext_resource type="PackedScene" uid="uid://rtllnmbgamrf" path="res://entities/Ship/ship.tscn" id="1_m637p"]
-[ext_resource type="Script" uid="uid://8xh03iscpgxu" path="res://levels/game.gd" id="1_vhr6a"]
 [ext_resource type="Texture2D" uid="uid://dpgmh5pihtve3" path="res://objects/easteregg/fucknobaby.png" id="2_748nt"]
 [ext_resource type="FontFile" uid="uid://cxfefgtap6lwe" path="res://misc/font.png" id="4_vhr6a"]
+[ext_resource type="Script" uid="uid://cfrkf0qblod8p" path="res://objects/ui/scorelabel/score.gd" id="5_30w35"]
+[ext_resource type="Script" uid="uid://rnfllxo7xkqn" path="res://objects/ui/healthlabel/lives.gd" id="6_cnc74"]
+[ext_resource type="Texture2D" uid="uid://cei4fjf3esib7" path="res://objects/ui/gameover.png" id="7_arvxu"]
+[ext_resource type="Texture2D" uid="uid://d0gafmv7dl2xv" path="res://objects/ui/ztorestart.png" id="8_kc1m6"]
+[ext_resource type="Script" uid="uid://c2p3dano5d2u6" path="res://objects/ui/gameover.gd" id="8_y7kp8"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_30w35"]
+line_spacing = 2.0
+font = ExtResource("4_vhr6a")
+font_size = 12
+outline_size = 1
+outline_color = Color(0, 0, 0, 1)
+shadow_size = 0
+
+[sub_resource type="LabelSettings" id="LabelSettings_vhr6a"]
+font = ExtResource("4_vhr6a")
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_vhr6a"]
 atlas = ExtResource("2_748nt")
@@ -209,19 +224,77 @@ animations = [{
 "speed": 24.0
 }]
 
-[sub_resource type="LabelSettings" id="LabelSettings_30w35"]
-line_spacing = 2.0
-font = ExtResource("4_vhr6a")
-font_size = 12
-outline_size = 1
-outline_color = Color(0, 0, 0, 1)
-shadow_size = 0
-
-[sub_resource type="LabelSettings" id="LabelSettings_vhr6a"]
-font = ExtResource("4_vhr6a")
-
 [node name="Game" type="Node2D"]
-script = ExtResource("1_vhr6a")
+
+[node name="UI" type="Control" parent="."]
+z_index = 999
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="ColorRect" type="ColorRect" parent="UI"]
+layout_mode = 0
+offset_left = 4.0
+offset_top = 3.0
+offset_right = 120.0
+offset_bottom = 15.0
+color = Color(0, 0, 0, 1)
+
+[node name="Score" type="Label" parent="UI"]
+layout_mode = 0
+offset_right = 60.0
+offset_bottom = 15.0
+scale = Vector2(2, 1)
+text = "000000"
+label_settings = SubResource("LabelSettings_30w35")
+script = ExtResource("5_30w35")
+
+[node name="ColorRect2" type="ColorRect" parent="UI"]
+layout_mode = 0
+offset_left = 302.0
+offset_top = 3.0
+offset_right = 318.0
+offset_bottom = 15.0
+color = Color(0, 0, 0, 1)
+
+[node name="Lives" type="Label" parent="UI"]
+layout_mode = 0
+offset_left = 256.0
+offset_right = 287.0
+offset_bottom = 14.0
+scale = Vector2(2, 1)
+text = "3"
+label_settings = SubResource("LabelSettings_vhr6a")
+horizontal_alignment = 2
+script = ExtResource("6_cnc74")
+
+[node name="GAMEOVER" type="Sprite2D" parent="UI"]
+visible = false
+position = Vector2(160, 120)
+scale = Vector2(4, 2)
+texture = ExtResource("7_arvxu")
+script = ExtResource("8_y7kp8")
+
+[node name="ColorRect" type="ColorRect" parent="UI/GAMEOVER"]
+z_index = -1
+offset_left = -19.0
+offset_top = -3.0
+offset_right = 19.0
+offset_bottom = 3.0
+color = Color(0, 0, 0, 1)
+
+[node name="Enter" type="Sprite2D" parent="UI/GAMEOVER"]
+position = Vector2(0, 9)
+texture = ExtResource("8_kc1m6")
+
+[node name="ColorRect2" type="ColorRect" parent="UI/GAMEOVER"]
+z_index = -1
+offset_left = -2.0
+offset_top = 7.0
+offset_right = 2.0
+offset_bottom = 12.0
+color = Color(0, 0, 0, 1)
 
 [node name="Ship" parent="." instance=ExtResource("1_m637p")]
 position = Vector2(160, 120)
@@ -233,25 +306,8 @@ position = Vector2(481, 112)
 scale = Vector2(0.25, 0.25)
 sprite_frames = SubResource("SpriteFrames_g1efs")
 autoplay = "default"
-frame_progress = 0.11396731
+frame_progress = 0.72403824
 
 [node name="AsteroidSpawnOpportunity" type="Timer" parent="."]
 wait_time = 6.0
 autostart = true
-
-[node name="Score" type="Label" parent="."]
-offset_right = 4.0
-offset_bottom = 15.0
-scale = Vector2(2, 1)
-text = "000000"
-label_settings = SubResource("LabelSettings_30w35")
-
-[node name="Lives" type="Label" parent="."]
-offset_left = 298.0
-offset_right = 338.0
-offset_bottom = 23.0
-scale = Vector2(2, 1)
-text = "3"
-label_settings = SubResource("LabelSettings_vhr6a")
-
-[connection signal="timeout" from="AsteroidSpawnOpportunity" to="." method="_on_asteroid_spawn_opportunity_timeout"]

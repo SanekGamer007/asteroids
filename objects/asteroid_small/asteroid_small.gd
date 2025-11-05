@@ -4,4 +4,5 @@ func _init() -> void:
 	size = 0
 
 func _on_timer_timeout() -> void:
-	self.queue_free()
+	despawn = true
+	$AnimatedSprite2D.play("despawn")

@@ -1,9 +1,10 @@
 extends CharacterBody2D
+class_name ship
 
 const ACCELERATION: float = 50
 const MAX_SPEED: float = 90
 const bullet: PackedScene = preload("res://entities/Ship/bullet.tscn")
-@onready var animsprite2d: AnimatedSprite2D = get_node("AnimatedSprite2D")
+@onready var animsprite2d: AnimatedSprite2D = get_node("ThrustAnim")
 signal died
 signal hit
 enum states {
@@ -13,7 +14,7 @@ enum states {
 	}
 var state: states = states.IDLE
 var screenwrapsize: Vector2
-var lives: int = 3 # 0 = death.
+var lives: int = 3 # -1 = death.
 var is_invulnerable: bool = false
 
 func _ready() -> void:
@@ -22,6 +23,7 @@ func _ready() -> void:
 	if collisionshape2d != null:
 		screenwrapsize = collisionshape2d.get_shape().get_rect().size
 		screenwrapsize /= 2
+	died.connect(_on_self_died)
 
 func _physics_process(delta: float) -> void:
 	var direction := Input.get_axis("ui_left", "ui_right")
@@ -33,7 +35,7 @@ func _physics_process(delta: float) -> void:
 		states.MOVING:
 			_handle_moving_state(direction, delta)
 		states.DEAD:
-			pass
+			_handle_dead_state()
 	_screen_wrap()
 	move_and_slide()
 
@@ -62,8 +64,12 @@ func _handle_moving_state(direction: float, delta: float) -> void:
 	if velocity.is_zero_approx() and direction == 0:
 		_set_state(states.IDLE)
 	
+func _handle_dead_state() -> void:
+	return
+
 func _shoot() -> void:
 	if (get_node("GunTimer") as Timer).is_stopped() == true:
+		$ShootSound.play()
 		var bullet_instance: Area2D = bullet.instantiate()
 		bullet_instance.global_position = get_node("GunPoint").global_position
 		bullet_instance.rotation = rotation
@@ -96,14 +102,30 @@ func _set_anim(anim: String) -> void:
 			push_warning("Invalid animation string! Ignoring...")
 
 func _on_self_hit() -> void:
-	if is_invulnerable != true:
+	if state == states.DEAD:
+		return
+	elif lives <= 0 and is_invulnerable != true:
+		died.emit()
+		_set_state(states.DEAD)
+	elif is_invulnerable != true:
+		$HitSound.play()
 		lives -= 1
 		is_invulnerable = true
 		velocity = Vector2(0, 75).rotated(rotation)
 		for i in range(0, 46):
-			get_node("AnimatedSprite2D").visible =! get_node("AnimatedSprite2D").visible
-			get_node("Sprite2D").visible =! get_node("Sprite2D").visible
+			get_node("ThrustAnim").visible =! get_node("ThrustAnim").visible
+			get_node("Ship").visible =! get_node("Ship").visible
 			await get_tree().create_timer(0.033).timeout
 		is_invulnerable = false
-	if lives <= 0:
-		died.emit()
+
+func _on_self_died() -> void:
+	$DeathSound.play()
+	$DeathAnim.visible = true
+	$DeathAnim.play("default")
+	$Ship.visible = false
+	$ThrustAnim.visible = false
+	is_invulnerable = false
+	set_process(false)
+	set_physics_process(false)
+	await $DeathAnim.animation_finished
+	$DeathAnim.visible = false

@@ -1,12 +1,29 @@
-[gd_scene load_steps=11 format=3 uid="uid://d1spllygyk272"]
+[gd_scene load_steps=16 format=3 uid="uid://d1spllygyk272"]
 
 [ext_resource type="PackedScene" uid="uid://swgv3vmpc5y" path="res://objects/asteroid_base/asteroid_base.tscn" id="1_iiv25"]
 [ext_resource type="Script" uid="uid://b3pns7wioqid5" path="res://objects/asteroid_small/asteroid_small.gd" id="2_vriaj"]
 [ext_resource type="Texture2D" uid="uid://b1765gdv37dxo" path="res://objects/asteroid_small/asteroid_small.png" id="3_tdf4m"]
+[ext_resource type="Texture2D" uid="uid://b8m2b6trnllqe" path="res://objects/asteroid_small/asteroid_small_dissapear.png" id="4_wcidy"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_wcidy"]
 atlas = ExtResource("3_tdf4m")
 region = Rect2(0, 0, 8, 8)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ateai"]
+atlas = ExtResource("4_wcidy")
+region = Rect2(0, 0, 8, 8)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_0sxrs"]
+atlas = ExtResource("4_wcidy")
+region = Rect2(8, 0, 8, 8)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_go2xs"]
+atlas = ExtResource("4_wcidy")
+region = Rect2(0, 8, 8, 8)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ncucr"]
+atlas = ExtResource("4_wcidy")
+region = Rect2(8, 8, 8, 8)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_imv17"]
 atlas = ExtResource("3_tdf4m")
@@ -36,6 +53,23 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
+"texture": SubResource("AtlasTexture_ateai")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_0sxrs")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_go2xs")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ncucr")
+}],
+"loop": false,
+"name": &"despawn",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
 "texture": SubResource("AtlasTexture_imv17")
 }, {
 "duration": 1.0,
@@ -57,11 +91,13 @@ size = Vector2(8, 8)
 
 [node name="Asteroid_Small" instance=ExtResource("1_iiv25")]
 script = ExtResource("2_vriaj")
-speedmin = 2.0
-speedmax = 4.0
+speedmin = 4.0
+speedmax = 6.0
 
 [node name="AnimatedSprite2D" parent="." index="0"]
 sprite_frames = SubResource("SpriteFrames_ateai")
+animation = &"despawn"
+autoplay = "default"
 speed_scale = 2.0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." index="1"]

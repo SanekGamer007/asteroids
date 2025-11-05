@@ -1,10 +1,14 @@
-[gd_scene load_steps=14 format=3 uid="uid://rtllnmbgamrf"]
+[gd_scene load_steps=23 format=3 uid="uid://rtllnmbgamrf"]
 
 [ext_resource type="Script" uid="uid://41pywoi5ldwk" path="res://entities/Ship/ship.gd" id="1_vael5"]
 [ext_resource type="Texture2D" uid="uid://2qdiaq51ilgs" path="res://entities/Ship/ship_fire_high.png" id="2_ra61u"]
 [ext_resource type="Texture2D" uid="uid://cal2uh33f4cy4" path="res://entities/Ship/ship.png" id="2_u1ybi"]
 [ext_resource type="Texture2D" uid="uid://bqxbx1rgrbgeh" path="res://entities/Ship/ship_fire_low.png" id="3_ccnl4"]
 [ext_resource type="Texture2D" uid="uid://utarci1k02oe" path="res://entities/Ship/ship_fire_stop.png" id="4_0rppb"]
+[ext_resource type="Texture2D" uid="uid://cl8jr5kqdqum8" path="res://entities/Ship/ship-explosion.png" id="6_ccnl4"]
+[ext_resource type="AudioStream" uid="uid://cb4abiy5gwnj3" path="res://entities/Ship/shipdied.wav" id="7_h333w"]
+[ext_resource type="AudioStream" uid="uid://bx1pn8wl6gbes" path="res://entities/Ship/shiphit.wav" id="8_r8okc"]
+[ext_resource type="AudioStream" uid="uid://c8yg0f545xukb" path="res://entities/Ship/laserShoot.wav" id="9_rm5it"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_vljmp"]
 atlas = ExtResource("2_ra61u")
@@ -69,21 +73,63 @@ animations = [{
 "speed": 5.0
 }]
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_0rppb"]
+atlas = ExtResource("6_ccnl4")
+region = Rect2(0, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_g7yu5"]
+atlas = ExtResource("6_ccnl4")
+region = Rect2(16, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_wvbfs"]
+atlas = ExtResource("6_ccnl4")
+region = Rect2(0, 16, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_12r01"]
+atlas = ExtResource("6_ccnl4")
+region = Rect2(16, 16, 16, 16)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_pimjx"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_0rppb")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_g7yu5")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_wvbfs")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_12r01")
+}],
+"loop": false,
+"name": &"default",
+"speed": 6.0
+}]
+
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_vael5"]
 size = Vector2(6, 15)
 
 [node name="Ship" type="CharacterBody2D" groups=["ship"]]
 script = ExtResource("1_vael5")
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+[node name="ThrustAnim" type="AnimatedSprite2D" parent="."]
 position = Vector2(0, 9)
 sprite_frames = SubResource("SpriteFrames_g7yu5")
 animation = &"stop"
 frame_progress = 0.9439362
 speed_scale = 2.0
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
+[node name="Ship" type="Sprite2D" parent="."]
 texture = ExtResource("2_u1ybi")
+
+[node name="DeathAnim" type="AnimatedSprite2D" parent="."]
+visible = false
+sprite_frames = SubResource("SpriteFrames_pimjx")
+frame = 3
+frame_progress = 1.0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, 0.5)
@@ -95,3 +141,13 @@ position = Vector2(0, -6)
 [node name="GunTimer" type="Timer" parent="."]
 wait_time = 0.4
 one_shot = true
+
+[node name="DeathSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("7_h333w")
+volume_db = -12.0
+
+[node name="HitSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("8_r8okc")
+
+[node name="ShootSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("9_rm5it")

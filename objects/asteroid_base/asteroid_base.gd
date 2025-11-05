@@ -6,6 +6,7 @@ extends Area2D
 @export var speedmax: float = 5
 var screenwrapsize: Vector2
 var size = -1 # template
+var despawn: bool = false
 
 
 var speed: float
@@ -29,6 +30,7 @@ func _physics_process(_delta: float) -> void:
 
 func _on_self_hit() -> void:
 	$AnimatedSprite2D.play("destroy")
+	$HitSound.play()
 
 func _screen_wrap() -> void:
 	if position.y < 0 - screenwrapsize.y:
@@ -55,5 +57,6 @@ func _on_animated_sprite_2d_animation_finished() -> void:
 			var scene: Node2D = next_size_scene.instantiate()
 			scene.position = self.position + offsets[i]
 			call_deferred("add_sibling", scene, true)
-	game.emit_signal("asteroid_destroyed", size)
+	if despawn == false:
+		game.emit_signal("asteroid_destroyed", size)
 	self.queue_free()
